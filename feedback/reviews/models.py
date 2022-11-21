@@ -4,6 +4,6 @@ from django.db import models
 
 
 class Review(models.Model):
-    user_name = models.CharField(max_length=200)
+    user_name = models.CharField(max_length=50)
     review_text = models.TextField()
     rating = models.IntegerField()
