@@ -3,48 +3,54 @@ from django.shortcuts import render
 from .form import ReviewForm
 from django.views import View
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Review
+from django.views.generic.edit import FormView
 # Create your views here.
 
 
-class ReviewView(View):
-    def get(self, request):
-        form = ReviewForm()
+class ReviewView(FormView):
+    template_name = "reviews/review.html"
+    form_class = ReviewForm
+    success_url = "/thank-you"
 
-        return render(request, "reviews/review.html", {
-            "form": form
-        })
+    # class ReviewView(View):
+    #     def get(self, request):
+    #         form = ReviewForm()
 
-    def post(self, request):
-        form = ReviewForm(request.POST)
+    #         return render(request, "reviews/review.html", {
+    #             "form": form
+    #         })
 
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/thank-you")
+    #     def post(self, request):
+    #         form = ReviewForm(request.POST)
 
-        return render(request, "reviews/review.html", {
-            "form": form
-        })
+    #         if form.is_valid():
+    #             form.save()
+    #             return HttpResponseRedirect("/thank-you")
 
+    #         return render(request, "reviews/review.html", {
+    #             "form": form
+    #         })
 
-# def review(request):
-#     if request.method == "POST":
+    # def review(request):
+    #     if request.method == "POST":
 
-#         if form.is_valid():
-#             # review = Review(
-#             #     user_name=form.cleaned_data["user_name"],
-#             #     review_text=form.cleaned_data["review_text"],
-#             #     rating=form.cleaned_data["rating"])                  #as we use ModelForm this is not needed
-#             form.save()
-#             return HttpResponseRedirect("/thank-you")
+    #         if form.is_valid():
+    #             # review = Review(
+    #             #     user_name=form.cleaned_data["user_name"],
+    #             #     review_text=form.cleaned_data["review_text"],
+    #             #     rating=form.cleaned_data["rating"])                  #as we use ModelForm this is not needed
+    #             form.save()
+    #             return HttpResponseRedirect("/thank-you")
 
-#     else:
-#         form=ReviewForm()
+    #     else:
+    #         form=ReviewForm()
 
-#     return render(request, "reviews/review.html", {
-#         "form": form
-#     })
+    #     return render(request, "reviews/review.html", {
+    #         "form": form
+    #     })
+
 
 class ThankYouView(TemplateView):
     template_name = "reviews/thank_you.html"
@@ -67,17 +73,29 @@ class ThankYouView(TemplateView):
 #         context["reviews"] = reviews
 #         return context
 # Above lines of code can be ignore if we used the bellow ListView
-class ReviewsListView(ListView):
+
+class ReviewsListView(ListView):  # Listview=To show all list of content
     template_name = "reviews/review_list.html"
     model = Review
+    context_object_name = "reviews"
+
+    # def get_queryset(self):
+    #     base_query = super().get_queryset()
+    #     data = base_query.filter(rating__gt=4)
+    #     return data
 
 
-class DetailReviewView(TemplateView):
+# DetailView= To show details of hte content
+# class DetailReviewView(TemplateView):
+#     template_name = "reviews/detailed_review.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         review_id = kwargs["id"]
+#         selected_review = Review.objects.get(pk=review_id)
+#         context["review"] = selected_review
+#         return context
+
+class ReviewDetailView(DetailView):
+    model = Review
     template_name = "reviews/detailed_review.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        review_id = kwargs["id"]
-        selected_review = Review.objects.get(pk=review_id)
-        context["review"] = selected_review
-        return context
