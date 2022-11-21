@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .form import ReviewForm
 from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView
 from .models import Review
 # Create your views here.
 
@@ -57,14 +58,18 @@ class ThankYouView(TemplateView):
         return context
 
 
-class ReviewsListView(TemplateView):
-    template_name = "reviews/review_list.html"
+# class ReviewsListView(TemplateView):
+#     template_name = "reviews/review_list.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        reviews = Review.objects.all()
-        context["reviews"] = reviews
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         reviews = Review.objects.all()
+#         context["reviews"] = reviews
+#         return context
+# Above lines of code can be ignore if we used the bellow ListView
+class ReviewsListView(ListView):
+    template_name = "reviews/review_list.html"
+    model = Review
 
 
 class DetailReviewView(TemplateView):
