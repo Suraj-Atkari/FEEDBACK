@@ -9,4 +9,4 @@ class CreateProfileView(View):
         return render(request, "profiles/create_profile.html")
 
     def post(self, request):
-        pass
+        print(request.FILES["image"])
