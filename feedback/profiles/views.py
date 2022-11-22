@@ -15,10 +15,10 @@ class CreateProfileView(View):
         })
 
     def post(self, request):
-        submitted_form = ProfileForm(request.POST, request.FILE)
+        submitted_form = ProfileForm(request.POST, request.FILES)
 
         if submitted_form.is_valid():
-            profile = UserProfile(image=request.FILE["user_image"])
+            profile = UserProfile(image=request.FILES["user_image"])
             profile.save()
             return HttpResponseRedirect("/profiles")
 
