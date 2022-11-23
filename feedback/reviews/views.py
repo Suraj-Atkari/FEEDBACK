@@ -104,3 +104,11 @@ class ReviewsListView(ListView):  # Listview=To show all list of content
 class ReviewDetailView(DetailView):
     model = Review
     template_name = "reviews/detailed_review.html"
+
+
+class AddFavouriteView(View):
+    def post(self, request):
+        review_id = request.POST["review.id"]
+        fav_review = Review.object.get(pk=review_id)
+        request.session["favourite_review"] = fav_review
+        return HttpResponseRedirect("/reviews/" + review_id)
